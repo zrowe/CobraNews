@@ -18,12 +18,17 @@ var ArticleSchema = new Schema({
         type: String
     },
 
+    byline: {
+        type: String
+    },
+
     url: {
         type: mongoose.SchemaTypes.Url
     },
 
     isSaved: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
 
     // `notes` is an array that stores ObjectIds

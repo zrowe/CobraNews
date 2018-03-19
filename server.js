@@ -1,12 +1,11 @@
 var express = require("express");
+var exphbs = require('express-handlebars');
 var bodyParser = require("body-parser");
-var logger = require("morgan");
 var mongoose = require("mongoose");
-// Require request and cheerio. This makes the scraping possible
 var request = require("request");
 var cheerio = require("cheerio");
 
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 
 // Require all models
 var db = require("./models");
@@ -16,31 +15,64 @@ var app = express();
 
 // Configure middleware
 
-// Use morgan logger for logging requests
-app.use(logger("dev"));
 // Use body-parser for handling form submissions
 app.use(bodyParser.urlencoded({ extended: true }));
-// Use express.static to serve the public folder as a static directory
+
 app.use(express.static("public"));
 
-// By default mongoose uses callbacks for async queries, we're setting it to use promises (.then syntax) instead
+app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
+app.set('view engine', 'handlebars');
+
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/populatedb2", {
+mongoose.connect("mongodb://localhost/cobranewsdb", {
     // useMongoClient: true
 });
 
-// // When the server starts, create and save a new User document to the db
-// // The "unique" rule in the User model's schema will prevent duplicate users from being added to the server
-// db.User.create({ name: "Ernest Hemingway" })
-//   .then(function (dbUser) {
-//     console.log(dbUser);
-//   })
-//   .catch(function (err) {
-//     console.log(err.message);
-//   });
 
 // Routes
+
+app.get("/", function(req, res) {
+    db.Article.find({ isSaved:false })
+        .then(function(dbArticles) {
+            res.render("home", { articles: dbArticles });
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
+});
+
+
+app.get("/saved", function(req, res) {
+    db.Article.find({ isSaved:true })
+        .then(function(dbArticles) {
+            res.render("saved", { articles: dbArticles });
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
+});
+
+
+app.put("/article/:id/save", function(req, res) {
+    db.Article.update({ _id: req.params.id },{ $set: { isSaved: true }})
+        .then(function() {
+
+        })
+        .catch(function(err) {
+            res.json(err);
+        });        
+})
+
+app.put("/article/:id/unsave", function(req, res) {
+    db.Article.update({ _id: req.params.id },{ $set: { isSaved: false }})
+        .then(function() {
+
+        })
+        .catch(function(err) {
+            res.json(err);
+        });        
+})
 
 // // Route for retrieving all Notes from the db
 // app.get("/notes", function (req, res) {
@@ -56,18 +88,18 @@ mongoose.connect("mongodb://localhost/populatedb2", {
 //     });
 // });
 
-// Route for retrieving all Users from the db
-// app.get("/user", function (req, res) {
-//   // Find all Users
-//   db.User.find({})
-//     .then(function (dbUser) {
-//       // If all Users are successfully found, send them back to the client
-//       res.json(dbUser);
-//     })
-//     .catch(function (err) {
-//       // If an error occurs, send the error back to the client
-//       res.json(err);
-//     });
+// Route for retrieving all Aricles from the db
+// app.get("/user", function(req, res) {
+//     // Find all Users
+//     db.User.find({})
+//         .then(function(dbUser) {
+//             // If all Users are successfully found, send them back to the client
+//             res.json(dbUser);
+//         })
+//         .catch(function(err) {
+//             // If an error occurs, send the error back to the client
+//             res.json(err);
+//         });
 // });
 
 // Route for saving a new Note to the db and associating it with a User
@@ -106,42 +138,43 @@ app.post("/submit", function(req, res) {
 //     });
 // });
 
-
-// Scrape data from one site and place it into the mongodb db
 app.get("/scrape", function(req, res) {
-    // Make a request for the news section of ycombinator
-    request("https://www.nytimes.com/", function(error, response, html) {
-        // Load the html body from request into cheerio
-        var $ = cheerio.load(html);
-        // For each element with a "title" class
-        $(".story").each(function(i, element) {
-            // Save the text and href of each link enclosed in the current element
-            var title = $(element).children("a").text();
-            var link = $(element).children("a").attr("href");
 
-            // If this found element had both a title and a link
-            if (title && link) {
-                // Insert the data in the article collection
-                db.Article.create({
-                        headline: title,
-                        url: link
-                    })
-                    .then(function(dbArticle) {
-                        console.log(dbArticle);
-                    })
-                    .catch(function(err) {
-                        console.log(err.message);
-                    });
-            }
-        });
+    request("https://www.nytimes.com/", function(error, response, html) {
+        if (!error && response.statusCode == 200) {
+            var $ = cheerio.load(html);
+
+            $(".story-heading").each(function(i, element) {
+
+                var headline = $(element).children("a").text();
+                var url = $(element).children("a").attr("href");
+                var summary = $(element).siblings(".summary").text();
+                var byline = $(element).siblings(".byline").text();
+
+                if (headline && url && summary) {
+                    db.Article.create({
+                            headline: headline,
+                            url: url,
+                            summary: summary,
+                            byline: byline
+                        })
+                        .then(function(dbArticle) {
+                            // console.log(dbArticle);
+                        })
+                        .catch(function(err) {
+                            console.log(err.message);
+                        });
+                }
+            });
+        }
     });
 
     // Send a "Scrape Complete" message to the browser
-    res.send("Scrape Complete");
+    res.send("Scrape Complete", 200);
 });
 
 
 // Start the server
 app.listen(PORT, function() {
-    console.log("App running on port " + PORT + "!");
+    console.log("App running on port " + PORT);
 });
