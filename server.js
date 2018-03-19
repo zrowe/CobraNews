@@ -33,7 +33,7 @@ mongoose.connect("mongodb://localhost/cobranewsdb", {
 // Routes
 
 app.get("/", function(req, res) {
-    db.Article.find({ isSaved:false })
+    db.Article.find({ isSaved: false })
         .then(function(dbArticles) {
             res.render("home", { articles: dbArticles });
         })
@@ -44,7 +44,7 @@ app.get("/", function(req, res) {
 
 
 app.get("/saved", function(req, res) {
-    db.Article.find({ isSaved:true })
+    db.Article.find({ isSaved: true })
         .then(function(dbArticles) {
             res.render("saved", { articles: dbArticles });
         })
@@ -55,23 +55,23 @@ app.get("/saved", function(req, res) {
 
 
 app.put("/article/:id/save", function(req, res) {
-    db.Article.update({ _id: req.params.id },{ $set: { isSaved: true }})
+    db.Article.update({ _id: req.params.id }, { $set: { isSaved: true } })
         .then(function() {
 
         })
         .catch(function(err) {
             res.json(err);
-        });        
+        });
 })
 
 app.put("/article/:id/unsave", function(req, res) {
-    db.Article.update({ _id: req.params.id },{ $set: { isSaved: false }})
+    db.Article.update({ _id: req.params.id }, { $set: { isSaved: false } })
         .then(function() {
 
         })
         .catch(function(err) {
             res.json(err);
-        });        
+        });
 })
 
 // // Route for retrieving all Notes from the db
@@ -159,18 +159,16 @@ app.get("/scrape", function(req, res) {
                             byline: byline
                         })
                         .then(function(dbArticle) {
-                            // console.log(dbArticle);
+                            console.log("......");
                         })
                         .catch(function(err) {
-                            console.log(err.message);
+                            console.log("-------");
                         });
                 }
             });
-        }
+        };
     });
-
-    // Send a "Scrape Complete" message to the browser
-    res.send("Scrape Complete", 200);
+    console.log("DONE");
 });
 
 

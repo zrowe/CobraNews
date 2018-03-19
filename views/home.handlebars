@@ -24,26 +24,30 @@
 
 <div class="container-fluid article-container">
 
-  {{#each articles}}
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4>
-        <a class="article-link" target="_blank" href="{{this.url}}">{{this.headline}}</a>
-        {{#if this.isSaved}}
-          <a class="btn btn-info notes" data-id={{this._id}}>Article Notes</a>        
-          <a class="btn btn-danger delete" data-id={{this._id}}>Delete from Saved</a>
-        {{else}}
-          <a class="btn btn-success save" data-id={{this._id}}>Save Article</a>
-        {{/if}}
-      </h4>
-    </div>
-    <div class="panel-body">
-      "{{this.summary}}"
-    </div>
-  </div> 
-
-  {{/each}}
-
+  {{#if articles}}
+    {{#each articles}}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4>
+          <a class="article-link" target="_blank" href="{{this.url}}">{{this.headline}}</a>
+          {{#if this.isSaved}}
+            <a class="btn btn-info notes" data-id={{this._id}}>Article Notes</a>        
+            <a class="btn btn-danger delete" data-id={{this._id}}>Delete from Saved</a>
+          {{else}}
+            <a class="btn btn-success save" data-id={{this._id}}>Save Article</a>
+          {{/if}}
+        </h4>
+      </div>
+      <div class="panel-body">
+        "{{this.summary}}"
+      </div>
+    </div> 
+    {{/each}}
+  {{else}}
+    <div class='alert alert-warning text-center'>
+      <h4>There are no unsaved articles.  Please press scrape"</h4>
+    </div> 
+  {{/if}}
 </div>
 
 <footer class="footer">
