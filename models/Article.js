@@ -33,7 +33,7 @@ var ArticleSchema = new Schema({
 
     // `notes` is an array that stores ObjectIds
     // The ref property links these ObjectIds to the Note model
-    // This allows us to populate the User with any associated Notes
+    // This allows us to populate the Article with any associated Notes
     notes: [{
         // Store ObjectIds in the array
         type: Schema.Types.ObjectId,
