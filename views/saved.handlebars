@@ -23,46 +23,82 @@
 
 <div class="container-fluid article-container">
 
-  {{#each articles}}
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4>
-        <a class="article-link" target="_blank" href="{{this.url}}">{{this.headline}}</a>
-        {{#if this.isSaved}}
-          <a class="btn btn-info notes" data-id={{this._id}}>Article Notes</a>        
-          <a class="btn btn-danger delete" data-id={{this._id}}>Delete from Saved</a>
-        {{else}}
-          <a class="btn btn-success save" data-id={{this._id}}>Save Article</a>
-        {{/if}}
-      </h4>
-    </div>
-    <div class="panel-body">
-      "{{this.summary}}"
-    </div>
-  </div> 
-
-  {{/each}}
-
+  {{#if articles}}
+    {{#each articles}}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4>
+          <a class="article-link" target="_blank" href="{{this.url}}">{{this.headline}}</a>
+          {{#if this.isSaved}}
+            <a class="btn btn-info add-note" data-id={{this._id}}>Add a Note</a>
+            <button type="button" class="btn btn-info" data-id={{this._id}} id="myBtn">Add a Note</button>      
+            <a class="btn btn-danger delete" data-id={{this._id}}>Delete from Saved</a>
+          {{else}}
+            <a class="btn btn-success save" data-id={{this._id}}>Save Article</a>
+          {{/if}}
+        </h4>
+      </div>
+      <div class="panel-body">
+        "{{this.summary}}"
+      </div>
+      {{#if notes}}
+      {{else}}
+      <div class="container">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Notes</th>
+        <th> </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each notes}}
+      <tr>
+        <td>{{this.body}}</td>
+        <td><a class="btn btn-success delete-note" data-id={{this._id}}>Delete This Note</a></td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+      {{/if}}
+    </div> 
+    {{/each}}
+  {{else}}
+    <div class='alert alert-warning text-center'>
+      <h4>There are no unsaved articles.  Please press scrape"</h4>
+    </div> 
+  {{/if}}
 </div>
 
-<div class="bootbox modal fade in" tabindex="-1" role="dialog" style="display: block;">
-  <div class="modal-content">
-    <div class="modal-body">
-      <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">x</button>
-      <div class="bootbox-body">
-        <div class="container-fluid test-center">
+
+<div class="container">
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 style="color:red;">Add a Note</h4>
+        </div>
+        <div class="modal-body">
+          <form role="form" action="/submit" method="post">
+            <div class="form-group">
+              <label for="body">Note:</label>
+              <input type="text" class="form-control" name="body" id="body" placeholder="Enter note">
+            </div>
+            <button type="submit" class="btn btn-default btn-success btn-block">Submit your Note</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-default btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
         </div>
       </div>
     </div>
-  </div>
+  </div> 
 </div>
-<div class="modal-backdrop fade in"></div>
-
-
-
-
-
-
 
 
 

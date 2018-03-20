@@ -57,7 +57,7 @@ app.get("/saved", function(req, res) {
 app.put("/article/:id/save", function(req, res) {
     db.Article.update({ _id: req.params.id }, { $set: { isSaved: true } })
         .then(function() {
-
+          
         })
         .catch(function(err) {
             res.json(err);
@@ -105,6 +105,7 @@ app.put("/article/:id/unsave", function(req, res) {
 // Route for saving a new Note to the db and associating it with a User
 app.post("/submit", function(req, res) {
     // Create a new Note in the db
+    console.log('tada');
     db.Note.create(req.body)
         .then(function(dbNote) {
             // If a Note was created successfully, find one User (there's only one) and push the new Note's _id to the User's `notes` array
@@ -159,16 +160,13 @@ app.get("/scrape", function(req, res) {
                             byline: byline
                         })
                         .then(function(dbArticle) {
-                            console.log("......");
+
                         })
-                        .catch(function(err) {
-                            console.log("-------");
-                        });
+                        .catch(function(err) {});
                 }
             });
         };
     });
-    console.log("DONE");
 });
 
 
