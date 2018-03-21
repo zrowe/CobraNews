@@ -81,24 +81,33 @@ app.put("/article/:id/unsave", function(req, res) {
 
 // Route for saving a new Note to the db and associating it with an Article
 app.post("/submit", function(req, res) {
-  console.log("1 - " + req.body.comment);
-  console.log("2 - " + req.body.articleId);
+
     db.Note.create(req.body)
         .then(function(dbNote) {
             // If a Note was created successfully, find the Article and push the new Note's _id to the Article's `notes` array
             // { new: true } tells the query that we want it to return the updated Article -- it returns the original by default
             // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-            return db.Article.findByIdAndUpdate(req.body.articleId, { $push: { notes: dbNote._id } }, { new: true });
+           return db.Article.findByIdAndUpdate(req.body.articleId, { $push: { notes: dbNote._id } }, { new: true });
         })
         .then(function(dbUser) {
-            // If the User was updated successfully, send it back to the client
-            res.json(dbUser);
+          res.sendStatus(response.statusCode);
         })
         .catch(function(err) {
             // If an error occurs, send it back to the client
             res.json(err);
         });
 });
+
+app.delete("/note/:id", function(req, res) {
+    db.Note.findByIdAndRemove(req.params.id)
+        .then(function() {
+          res.sendStatus(response.statusCode);
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
+})
+
 
 
 app.get("/scrape", function(req, res) {

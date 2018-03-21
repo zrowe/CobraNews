@@ -30,7 +30,7 @@
         <h4>
           <a class="article-link" target="_blank" href="{{this.url}}">{{this.headline}}</a>
           {{#if this.isSaved}}
-            <button type="button" class="btn btn-success" data-id={{this._id}} id="myBtn">Add a Note</button>      
+            <button type="button" class="btn btn-success myBtn" data-id={{this._id}} id="myBtn">Add a Note</button>      
             <a class="btn btn-danger delete" data-id={{this._id}}>Delete from Saved</a>
           {{else}}
             <a class="btn btn-success save" data-id={{this._id}}>Save Article</a>
