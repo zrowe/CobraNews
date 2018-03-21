@@ -16,7 +16,6 @@ $(document).ready(function() {
 
     // Launch Modal to add a note
     $(".myBtn").click(function() {
-        console.log($(this).data('id'));
         $("#articleId").val($(this).data('id'));
         $("#myModal").modal();
     });
@@ -32,15 +31,13 @@ $(document).ready(function() {
         }
 
         $.post("/submit/", newNote, function(response) {
-            console.log(response);
-                            location.reload();
+            location.reload();
         });
     });
 
-    // unsave the article
+    // Delete a note
     $(".delete-note").on("click", function(event) {
         event.preventDefault();
-console.log(this.dataset);
         $.ajax("/note/" + this.dataset.id, {
             type: "DELETE"
         }).then(
@@ -49,7 +46,4 @@ console.log(this.dataset);
             }
         );
     });
-
-
-
 });

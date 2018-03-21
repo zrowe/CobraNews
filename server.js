@@ -61,7 +61,7 @@ app.get("/saved", function(req, res) {
 app.put("/article/:id/save", function(req, res) {
     db.Article.update({ _id: req.params.id }, { $set: { isSaved: true } })
         .then(function() {
-          res.sendStatus(response.statusCode);
+            res.sendStatus(response.statusCode);
         })
         .catch(function(err) {
             res.json(err);
@@ -71,7 +71,7 @@ app.put("/article/:id/save", function(req, res) {
 app.put("/article/:id/unsave", function(req, res) {
     db.Article.update({ _id: req.params.id }, { $set: { isSaved: false } })
         .then(function() {
-          res.sendStatus(response.statusCode);
+            res.sendStatus(response.statusCode);
         })
         .catch(function(err) {
             res.json(err);
@@ -84,13 +84,10 @@ app.post("/submit", function(req, res) {
 
     db.Note.create(req.body)
         .then(function(dbNote) {
-            // If a Note was created successfully, find the Article and push the new Note's _id to the Article's `notes` array
-            // { new: true } tells the query that we want it to return the updated Article -- it returns the original by default
-            // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-           return db.Article.findByIdAndUpdate(req.body.articleId, { $push: { notes: dbNote._id } }, { new: true });
+            return db.Article.findByIdAndUpdate(req.body.articleId, { $push: { notes: dbNote._id } }, { new: true });
         })
         .then(function(dbUser) {
-          res.sendStatus(response.statusCode);
+            res.sendStatus(response.statusCode);
         })
         .catch(function(err) {
             // If an error occurs, send it back to the client
@@ -101,7 +98,7 @@ app.post("/submit", function(req, res) {
 app.delete("/note/:id", function(req, res) {
     db.Note.findByIdAndRemove(req.params.id)
         .then(function() {
-          res.sendStatus(response.statusCode);
+            res.sendStatus(response.statusCode);
         })
         .catch(function(err) {
             res.json(err);
@@ -114,32 +111,34 @@ app.get("/scrape", function(req, res) {
 
     request("https://www.nytimes.com/", function(error, response, html) {
         if (!error && response.statusCode == 200) {
-            var $ = cheerio.load(html);
-
-            $(".story-heading").each(function(i, element) {
-
-                var headline = $(element).children("a").text();
-                var url = $(element).children("a").attr("href");
-                var summary = $(element).siblings(".summary").text();
-                var byline = $(element).siblings(".byline").text();
-
-                if (headline && url && summary) {
-                    db.Article.create({
-                            headline: headline,
-                            url: url,
-                            summary: summary,
-                            byline: byline
-                        })
-                        .then(function(dbArticle) {
-                            if (i === 20) {res.sendStatus(response.statusCode)};
-
-                        })
-                        .catch(function(err) {});
-                }
-            });
-        };
+            var articles = scrape(html);
+            db.Article.create(articles)
+                .then(function(dbArticle) {
+                    res.sendStatus(response.statusCode);
+                })
+                .catch(function(err) {
+                    res.json(err);
+                });
+        }
     });
 });
+
+function scrape(html) {
+    var arr = [];
+    var $ = cheerio.load(html);
+    $(".story-heading").each(function(i, element) {
+        article = {};
+        article.headline = $(element).children("a").text();
+        article.url = $(element).children("a").attr("href");
+        article.summary = $(element).siblings(".summary").text();
+        article.byline = $(element).siblings(".byline").text();
+
+        if (article.headline && article.url && article.summary) {
+            arr.push(article);
+        }
+    });
+    return arr
+}
 
 
 // Start the server

@@ -9,7 +9,7 @@ $(document).ready(function() {
             type: "GET"
         }).then(
             function(data) {
-                location.reload();
+                location.reload(false);
             }
         );
     });
