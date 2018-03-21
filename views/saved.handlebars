@@ -30,7 +30,6 @@
         <h4>
           <a class="article-link" target="_blank" href="{{this.url}}">{{this.headline}}</a>
           {{#if this.isSaved}}
-            <a class="btn btn-info add-note" data-id={{this._id}}>Add a Note</a>
             <button type="button" class="btn btn-info" data-id={{this._id}} id="myBtn">Add a Note</button>      
             <a class="btn btn-danger delete" data-id={{this._id}}>Delete from Saved</a>
           {{else}}
@@ -42,7 +41,6 @@
         "{{this.summary}}"
       </div>
       {{#if notes}}
-      {{else}}
       <div class="container">
   <table class="table table-hover">
     <thead>
@@ -55,7 +53,7 @@
       {{#each notes}}
       <tr>
         <td>{{this.body}}</td>
-        <td><a class="btn btn-success delete-note" data-id={{this._id}}>Delete This Note</a></td>
+        <td style="text-align: right;"><a class="btn btn-success delete-note" data-id={{this._id}}>Delete This Note</a></td>
       </tr>
       {{/each}}
     </tbody>
@@ -66,31 +64,28 @@
     {{/each}}
   {{else}}
     <div class='alert alert-warning text-center'>
-      <h4>There are no saved articles.  Go back top home and save at least one article"</h4>
+      <h4>There are no saved articles.  Go back to home and save at least one article"</h4>
     </div> 
   {{/if}}
 </div>
 
-
-<div class="container">
   <!-- Modal -->
+<div class="container">
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-
-      <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 style="color:red;">Add a Note</h4>
         </div>
         <div class="modal-body">
-          <form role="form" action="/submit" method="post">
-            <input type="hidden" id="articleId" name="articleId" value="104" />
+          <form role="form">
+            <input type="hidden" id="articleId" name="articleId" value="dummy" />
             <div class="form-group">
               <label for="body">Note:</label>
-              <input type="text" class="form-control" name="body" id="body" placeholder="Enter note">
+              <input type="text" class="form-control" name="comment" id="comment" placeholder="Enter note">
             </div>
-            <button type="submit" class="btn btn-default btn-success btn-block">Submit your Note</button>
+            <button type="button" class="btn btn-default btn-success btn-block" id="submitNote">Submit your Note</button>
           </form>
         </div>
         <div class="modal-footer">
@@ -112,6 +107,5 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 <script src="../../assets/js/saved.js"></script>
   

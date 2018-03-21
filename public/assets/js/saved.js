@@ -1,40 +1,40 @@
-$(document).ready(function() {
+$(document).ready(function(event) {
 
-    // save the article
-    $(".save").on("click", function() {
-
-        event.preventDefault();
-
-        $.ajax("/article/" + this.dataset.id + "/save", {
-            type: "PUT"
-        }).then(
-            function() {
-
-                location.reload();
-            }
-        );
-    });
 
     // unsave the article
-    $(".delete").on("click", function() {
-
+    $(".delete").on("click", function(event) {
         event.preventDefault();
 
         $.ajax("/article/" + this.dataset.id + "/unsave", {
             type: "PUT"
         }).then(
             function() {
-
                 location.reload();
             }
         );
     });
 
-    // Add a note
-    $("#myBtn").click(function() {
-        console.log($(this).data('id'));
-          $("#articleId").val($(this).data('id'));
+
+    // Launch Modal to add a note
+    $("#myBtn").click(function(event) {
+        event.preventDefault();
+        // console.log($(this).data('id'));
+        $("#articleId").val($(this).data('id'));
         $("#myModal").modal();
     });
-});
 
+
+    // Get form results and send to server to add a note
+    $("submitNote").click(function(event) {
+        event.preventDefault();
+
+        var newNote = {
+            comment: $("#body").val(),
+            articleId: $("articleId").val()
+        }
+
+        $.post("/submit/", newNote, function(response) {
+            console.log(response);
+        });
+    });
+});

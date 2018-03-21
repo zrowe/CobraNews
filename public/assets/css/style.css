@@ -44,7 +44,8 @@ body {
 
 .jumbotron .background-image {
   height: 100%;
-  background-image: url("../image/newspaper.jpg");
+  /*background-image: url("../image/newspaper.jpg");*/
+  background: url("../image/Bitstamp_web_background_stars-min.png") no-repeat center fixed;
   background-size: cover;
 }
 

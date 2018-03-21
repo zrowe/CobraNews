@@ -57,11 +57,11 @@ app.get("/saved", function(req, res) {
         });
 });
 
-
+// mark an article as saved
 app.put("/article/:id/save", function(req, res) {
     db.Article.update({ _id: req.params.id }, { $set: { isSaved: true } })
         .then(function() {
-          
+          res.sendStatus(response.statusCode);
         })
         .catch(function(err) {
             res.json(err);
@@ -71,7 +71,7 @@ app.put("/article/:id/save", function(req, res) {
 app.put("/article/:id/unsave", function(req, res) {
     db.Article.update({ _id: req.params.id }, { $set: { isSaved: false } })
         .then(function() {
-
+          res.sendStatus(response.statusCode);
         })
         .catch(function(err) {
             res.json(err);
@@ -81,9 +81,7 @@ app.put("/article/:id/unsave", function(req, res) {
 
 // Route for saving a new Note to the db and associating it with an Article
 app.post("/submit", function(req, res) {
-    // Create a new Note in the db
-    // var articleID = req.params;
-                // console.log(articleID);
+  
     db.Note.create(req.body)
         .then(function(dbNote) {
             console.log(articleID);
@@ -124,6 +122,7 @@ app.get("/scrape", function(req, res) {
                             byline: byline
                         })
                         .then(function(dbArticle) {
+                            if (i === 20) {res.sendStatus(response.statusCode)};
 
                         })
                         .catch(function(err) {});
