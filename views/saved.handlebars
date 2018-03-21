@@ -30,7 +30,7 @@
         <h4>
           <a class="article-link" target="_blank" href="{{this.url}}">{{this.headline}}</a>
           {{#if this.isSaved}}
-            <button type="button" class="btn btn-info" data-id={{this._id}} id="myBtn">Add a Note</button>      
+            <button type="button" class="btn btn-success" data-id={{this._id}} id="myBtn">Add a Note</button>      
             <a class="btn btn-danger delete" data-id={{this._id}}>Delete from Saved</a>
           {{else}}
             <a class="btn btn-success save" data-id={{this._id}}>Save Article</a>
@@ -52,8 +52,8 @@
     <tbody>
       {{#each notes}}
       <tr>
-        <td>{{this.body}}</td>
-        <td style="text-align: right;"><a class="btn btn-success delete-note" data-id={{this._id}}>Delete This Note</a></td>
+        <td>{{this.comment}}</td>
+        <td style="text-align: right;"><a class="btn btn-danger delete-note" data-id={{this._id}}>Delete This Note</a></td>
       </tr>
       {{/each}}
     </tbody>
@@ -82,7 +82,7 @@
           <form role="form">
             <input type="hidden" id="articleId" name="articleId" value="dummy" />
             <div class="form-group">
-              <label for="body">Note:</label>
+              <label for="comment">Note:</label>
               <input type="text" class="form-control" name="comment" id="comment" placeholder="Enter note">
             </div>
             <button type="button" class="btn btn-default btn-success btn-block" id="submitNote">Submit your Note</button>
@@ -95,9 +95,6 @@
     </div>
   </div> 
 </div>
-
-
-
 
 <footer class="footer">
   <div class="container">

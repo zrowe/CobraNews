@@ -1,5 +1,4 @@
-$(document).ready(function(event) {
-
+$(document).ready(function() {
 
     // unsave the article
     $(".delete").on("click", function(event) {
@@ -16,21 +15,20 @@ $(document).ready(function(event) {
 
 
     // Launch Modal to add a note
-    $("#myBtn").click(function(event) {
-        event.preventDefault();
-        // console.log($(this).data('id'));
+    $("#myBtn").click(function() {
+        console.log($(this).data('id'));
         $("#articleId").val($(this).data('id'));
         $("#myModal").modal();
     });
 
 
     // Get form results and send to server to add a note
-    $("submitNote").click(function(event) {
+    $("#submitNote").click(function(event) {
         event.preventDefault();
 
         var newNote = {
-            comment: $("#body").val(),
-            articleId: $("articleId").val()
+            comment: $("#comment").val(),
+            articleId: $("#articleId").val()
         }
 
         $.post("/submit/", newNote, function(response) {
